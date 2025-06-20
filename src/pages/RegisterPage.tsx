@@ -23,6 +23,7 @@ const RegisterPage = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterForm>();
 
   const password = watch('password');
+  const selectedRole = watch('role'); // <-- Add this line
 
   const onSubmit = async (data: RegisterForm) => {
     setIsLoading(true);
@@ -105,7 +106,13 @@ const RegisterPage = () => {
                       {...register('role', { required: 'Please select a role' })}
                       className="sr-only"
                     />
-                    <div className="p-3 rounded-lg border border-gray-600 text-center cursor-pointer hover:border-primary-500 transition-colors">
+                    <div
+                      className={`p-3 rounded-lg border text-center cursor-pointer transition-colors
+                        ${selectedRole === role
+                          ? 'border-primary-500 bg-primary-500/20 shadow-lg'
+                          : 'border-gray-600 hover:border-primary-500'}
+                        `}
+                    >
                       <span className="text-white capitalize">{role}</span>
                     </div>
                   </label>
