@@ -17,7 +17,8 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<LoginForm>();
+  const selectedRole = watch('role');
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
@@ -75,7 +76,13 @@ const LoginPage = () => {
                       {...register('role', { required: 'Please select a role' })}
                       className="sr-only"
                     />
-                    <div className="p-3 rounded-lg border border-gray-600 text-center cursor-pointer hover:border-primary-500 transition-colors">
+                    <div
+                      className={`p-3 rounded-lg border text-center cursor-pointer transition-colors
+                        ${selectedRole === role
+                          ? 'border-primary-500 bg-primary-500/20 shadow-lg'
+                          : 'border-gray-600 hover:border-primary-500'}
+                        `}
+                    >
                       <span className="text-white capitalize">{role}</span>
                     </div>
                   </label>
