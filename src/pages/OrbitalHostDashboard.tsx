@@ -33,7 +33,7 @@ const OrbitalHostDashboard = () => {
       title: 'Audio Capture',
       icon: Mic,
       angle: 0,
-      radius: 200,
+      radius: 120, // Reduced for mobile
       color: 'from-red-500 to-pink-600',
       description: 'Real-time transcription',
       stats: { active: isAudioActive, value: '2.3s avg' }
@@ -43,7 +43,7 @@ const OrbitalHostDashboard = () => {
       title: 'Analytics',
       icon: BarChart3,
       angle: 72,
-      radius: 200,
+      radius: 120,
       color: 'from-blue-500 to-cyan-600',
       description: 'Performance insights',
       stats: { active: true, value: '87.5% accuracy' }
@@ -53,7 +53,7 @@ const OrbitalHostDashboard = () => {
       title: 'Participants',
       icon: Users,
       angle: 144,
-      radius: 200,
+      radius: 120,
       color: 'from-green-500 to-emerald-600',
       description: 'Manage users',
       stats: { active: true, value: '342 active' }
@@ -63,7 +63,7 @@ const OrbitalHostDashboard = () => {
       title: 'Leaderboard',
       icon: Trophy,
       angle: 216,
-      radius: 200,
+      radius: 120,
       color: 'from-yellow-500 to-orange-600',
       description: 'Top performers',
       stats: { active: true, value: 'Top: 95.1%' }
@@ -73,7 +73,7 @@ const OrbitalHostDashboard = () => {
       title: 'Reports',
       icon: FileText,
       angle: 288,
-      radius: 200,
+      radius: 120,
       color: 'from-purple-500 to-indigo-600',
       description: 'Export data',
       stats: { active: false, value: '1,247 polls' }
@@ -87,7 +87,7 @@ const OrbitalHostDashboard = () => {
       title: 'AI Brain',
       icon: Brain,
       angle: 45,
-      radius: 120,
+      radius: 80, // Reduced for mobile
       color: 'from-violet-500 to-purple-600',
       description: 'Question generation',
       stats: { active: true, value: '23 pending' }
@@ -97,7 +97,7 @@ const OrbitalHostDashboard = () => {
       title: 'Settings',
       icon: Settings,
       angle: 135,
-      radius: 120,
+      radius: 80,
       color: 'from-gray-500 to-slate-600',
       description: 'System config',
       stats: { active: false, value: 'Configure' }
@@ -107,7 +107,7 @@ const OrbitalHostDashboard = () => {
       title: 'System Energy',
       icon: Zap,
       angle: 225,
-      radius: 120,
+      radius: 80,
       color: 'from-amber-500 to-yellow-600',
       description: 'Performance',
       stats: { active: true, value: '98% uptime' }
@@ -117,7 +117,7 @@ const OrbitalHostDashboard = () => {
       title: 'Live Activity',
       icon: Activity,
       angle: 315,
-      radius: 120,
+      radius: 80,
       color: 'from-teal-500 to-cyan-600',
       description: 'Real-time events',
       stats: { active: true, value: '12 events/min' }
@@ -137,17 +137,18 @@ const OrbitalHostDashboard = () => {
   // Handle command input
   const handleCommand = (command: string) => {
     console.log('Processing command:', command);
-    // Process commands like "/create poll", "/start audio", etc.
     setCommandInput('');
     setShowCommandBar(false);
   };
 
-  // Calculate orbital position
+  // Calculate orbital position with responsive scaling
   const getOrbitalPosition = (angle: number, radius: number) => {
     const radian = (angle * Math.PI) / 180;
+    // Scale radius based on screen size
+    const scaledRadius = window.innerWidth < 768 ? radius * 0.7 : radius;
     return {
-      x: Math.cos(radian) * radius,
-      y: Math.sin(radian) * radius
+      x: Math.cos(radian) * scaledRadius,
+      y: Math.sin(radian) * scaledRadius
     };
   };
 
@@ -168,37 +169,39 @@ const OrbitalHostDashboard = () => {
           <motion.circle
             cx="400"
             cy="300"
-            r="200"
+            r="120"
             fill="none"
             stroke="rgba(139, 92, 246, 0.2)"
             strokeWidth="1"
             strokeDasharray="5,5"
             animate={{ rotate: 360 }}
             transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            className="hidden sm:block"
           />
           
           {/* Secondary orbit ring */}
           <motion.circle
             cx="400"
             cy="300"
-            r="120"
+            r="80"
             fill="none"
             stroke="rgba(59, 130, 246, 0.2)"
             strokeWidth="1"
             strokeDasharray="3,3"
             animate={{ rotate: -360 }}
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            className="hidden sm:block"
           />
           
           {/* Energy field */}
-          <circle cx="400" cy="300" r="300" fill="url(#orbitGradient)" />
+          <circle cx="400" cy="300" r="200" fill="url(#orbitGradient)" className="hidden sm:block" />
         </svg>
 
         {/* Floating particles */}
-        {[...Array(20)].map((_, i) => (
+        {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-60"
+            className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-60 hidden sm:block"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -227,25 +230,25 @@ const OrbitalHostDashboard = () => {
           {/* Core Avatar/Control Panel */}
           <motion.div
             whileHover={{ scale: 1.1 }}
-            className="w-32 h-32 bg-gradient-to-br from-purple-500 via-blue-600 to-teal-500 rounded-full flex items-center justify-center relative overflow-hidden cursor-pointer"
+            className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-purple-500 via-blue-600 to-teal-500 rounded-full flex items-center justify-center relative overflow-hidden cursor-pointer"
             style={{
-              boxShadow: '0 0 50px rgba(139, 92, 246, 0.5), inset 0 0 50px rgba(255, 255, 255, 0.1)'
+              boxShadow: '0 0 30px rgba(139, 92, 246, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.1)'
             }}
           >
             {/* Audio waveform ring when active */}
             {isAudioActive && (
               <div className="absolute inset-0 flex items-center justify-center">
-                {audioWaveform.map((height, index) => (
+                {audioWaveform.slice(0, 12).map((height, index) => (
                   <motion.div
                     key={index}
                     className="absolute bg-white/60"
                     style={{
                       width: '2px',
-                      height: `${height * 0.3}px`,
-                      transform: `rotate(${index * 18}deg) translateY(-${40 + height * 0.2}px)`,
-                      transformOrigin: 'center 40px',
+                      height: `${height * 0.2}px`,
+                      transform: `rotate(${index * 30}deg) translateY(-${25 + height * 0.1}px)`,
+                      transformOrigin: 'center 25px',
                     }}
-                    animate={{ height: `${height * 0.3}px` }}
+                    animate={{ height: `${height * 0.2}px` }}
                     transition={{ duration: 0.1 }}
                   />
                 ))}
@@ -253,8 +256,8 @@ const OrbitalHostDashboard = () => {
             )}
             
             {/* User Avatar */}
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center z-10">
-              <span className="text-white font-bold text-xl">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-20 lg:h-20 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center z-10">
+              <span className="text-white font-bold text-sm sm:text-base lg:text-xl">
                 {user?.fullName?.split(' ').map(n => n[0]).join('') || 'HC'}
               </span>
             </div>
@@ -272,10 +275,10 @@ const OrbitalHostDashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 text-center"
+            className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 sm:mt-4 text-center"
           >
-            <h2 className="text-white font-bold text-lg">Host Control</h2>
-            <p className="text-purple-300 text-sm">System Active</p>
+            <h2 className="text-white font-bold text-sm sm:text-base lg:text-lg">Host Control</h2>
+            <p className="text-purple-300 text-xs sm:text-sm">System Active</p>
           </motion.div>
         </motion.div>
       </div>
@@ -288,7 +291,7 @@ const OrbitalHostDashboard = () => {
             key={feature.id}
             className="absolute top-1/2 left-1/2 z-10"
             style={{
-              transform: `translate(${position.x - 50}px, ${position.y - 50}px)`,
+              transform: `translate(${position.x - 30}px, ${position.y - 30}px)`,
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -310,9 +313,9 @@ const OrbitalHostDashboard = () => {
                 rotate: { duration: 120, repeat: Infinity, ease: "linear" }
               }}
             >
-              <GlassCard className="w-24 h-24 p-4 hover:shadow-2xl transition-all duration-300">
+              <GlassCard className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 p-2 sm:p-3 lg:p-4 hover:shadow-2xl transition-all duration-300">
                 <div className={`w-full h-full bg-gradient-to-br ${feature.color} rounded-lg flex items-center justify-center relative overflow-hidden`}>
-                  <feature.icon className="w-8 h-8 text-white z-10" />
+                  <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white z-10" />
                   
                   {/* Glow effect */}
                   <motion.div
@@ -322,15 +325,15 @@ const OrbitalHostDashboard = () => {
                   />
                   
                   {/* Status indicator */}
-                  <div className={`absolute top-1 right-1 w-2 h-2 rounded-full ${
+                  <div className={`absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
                     feature.stats.active ? 'bg-green-400' : 'bg-gray-400'
                   }`} />
                 </div>
               </GlassCard>
               
-              {/* Feature label */}
+              {/* Feature label - Hidden on mobile */}
               <motion.div
-                className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-center"
+                className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-center hidden lg:block"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               >
@@ -350,7 +353,7 @@ const OrbitalHostDashboard = () => {
             key={feature.id}
             className="absolute top-1/2 left-1/2 z-10"
             style={{
-              transform: `translate(${position.x - 30}px, ${position.y - 30}px)`,
+              transform: `translate(${position.x - 20}px, ${position.y - 20}px)`,
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -368,12 +371,12 @@ const OrbitalHostDashboard = () => {
                 rotate: { duration: 80, repeat: Infinity, ease: "linear" }
               }}
             >
-              <GlassCard className="w-16 h-16 p-3">
+              <GlassCard className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 p-2 sm:p-3">
                 <div className={`w-full h-full bg-gradient-to-br ${feature.color} rounded-lg flex items-center justify-center relative`}>
-                  <feature.icon className="w-5 h-5 text-white" />
+                  <feature.icon className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
                   
                   {/* Mini status indicator */}
-                  <div className={`absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full ${
+                  <div className={`absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${
                     feature.stats.active ? 'bg-green-400' : 'bg-gray-400'
                   }`} />
                 </div>
@@ -390,18 +393,18 @@ const OrbitalHostDashboard = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30"
+            className="fixed bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-30 w-full max-w-sm sm:max-w-md lg:max-w-lg px-4"
           >
-            <GlassCard className="p-4 min-w-96">
-              <div className="flex items-center space-x-3">
-                <Command className="w-5 h-5 text-purple-400" />
+            <GlassCard className="p-3 sm:p-4">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <Command className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 flex-shrink-0" />
                 <input
                   type="text"
                   value={commandInput}
                   onChange={(e) => setCommandInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleCommand(commandInput)}
-                  placeholder="Enter command... (/create poll, /start audio, /export data)"
-                  className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
+                  placeholder="Enter command..."
+                  className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm sm:text-base"
                   autoFocus
                 />
               </div>
@@ -411,42 +414,42 @@ const OrbitalHostDashboard = () => {
       </AnimatePresence>
 
       {/* Quick Actions HUD */}
-      <div className="fixed top-6 right-6 z-20">
-        <div className="space-y-3">
+      <div className="fixed top-4 sm:top-6 right-4 sm:right-6 z-20">
+        <div className="space-y-2 sm:space-y-3">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsAudioActive(!isAudioActive)}
-            className={`w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-xl border border-white/20 ${
+            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center backdrop-blur-xl border border-white/20 ${
               isAudioActive ? 'bg-red-500/20 text-red-400' : 'bg-white/10 text-gray-400'
             }`}
           >
-            {isAudioActive ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+            {isAudioActive ? <Pause className="w-4 h-4 sm:w-5 sm:h-5" /> : <Play className="w-4 h-4 sm:w-5 sm:h-5" />}
           </motion.button>
           
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setShowCommandBar(!showCommandBar)}
-            className="w-12 h-12 rounded-full flex items-center justify-center bg-purple-500/20 text-purple-400 backdrop-blur-xl border border-purple-500/30"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-purple-500/20 text-purple-400 backdrop-blur-xl border border-purple-500/30"
           >
-            <Command className="w-5 h-5" />
+            <Command className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.button>
         </div>
       </div>
 
       {/* Live Stats Overlay */}
-      <div className="fixed top-6 left-6 z-20">
-        <GlassCard className="p-4">
-          <div className="space-y-2">
+      <div className="fixed top-4 sm:top-6 left-4 sm:left-6 z-20">
+        <GlassCard className="p-3 sm:p-4">
+          <div className="space-y-1 sm:space-y-2">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white text-sm">System Online</span>
+              <span className="text-white text-xs sm:text-sm">System Online</span>
             </div>
             <div className="text-gray-300 text-xs">
               <div>Active Polls: 12</div>
               <div>Participants: 342</div>
-              <div>Uptime: 99.8%</div>
+              <div className="hidden sm:block">Uptime: 99.8%</div>
             </div>
           </div>
         </GlassCard>
@@ -464,27 +467,27 @@ const OrbitalHostDashboard = () => {
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
-              className="max-w-md w-full"
+              className="max-w-sm sm:max-w-md w-full"
             >
-              <GlassCard className="p-6">
+              <GlassCard className="p-4 sm:p-6">
                 {(() => {
                   const feature = [...orbitalFeatures, ...secondaryOrbit].find(f => f.id === selectedOrbit);
                   if (!feature) return null;
                   
                   return (
                     <div className="text-center">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                        <feature.icon className="w-8 h-8 text-white" />
+                      <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${feature.color} rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4`}>
+                        <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                      <p className="text-gray-300 mb-4">{feature.description}</p>
-                      <div className="bg-white/5 rounded-lg p-3">
-                        <p className="text-purple-300">{feature.stats.value}</p>
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{feature.title}</h3>
+                      <p className="text-gray-300 mb-3 sm:mb-4 text-sm sm:text-base">{feature.description}</p>
+                      <div className="bg-white/5 rounded-lg p-2 sm:p-3">
+                        <p className="text-purple-300 text-sm sm:text-base">{feature.stats.value}</p>
                       </div>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="mt-4 px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                        className="mt-3 sm:mt-4 px-4 sm:px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors text-sm sm:text-base"
                         onClick={() => {
                           console.log(`Navigating to ${feature.id}`);
                           setSelectedOrbit(null);
@@ -501,31 +504,14 @@ const OrbitalHostDashboard = () => {
         )}
       </AnimatePresence>
 
-      {/* Keyboard shortcuts hint */}
-      <div className="fixed bottom-6 left-6 z-20">
+      {/* Keyboard shortcuts hint - Hidden on mobile */}
+      <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-20 hidden lg:block">
         <GlassCard className="p-3">
           <div className="text-gray-400 text-xs">
             <div>Press <kbd className="bg-white/10 px-1 rounded">Cmd+K</kbd> for commands</div>
             <div>Press <kbd className="bg-white/10 px-1 rounded">Space</kbd> to toggle audio</div>
           </div>
         </GlassCard>
-      </div>
-
-      {/* Keyboard shortcuts */}
-      <div className="sr-only">
-        <button
-          onClick={() => setShowCommandBar(true)}
-          onKeyDown={(e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-              e.preventDefault();
-              setShowCommandBar(true);
-            }
-            if (e.key === ' ') {
-              e.preventDefault();
-              setIsAudioActive(!isAudioActive);
-            }
-          }}
-        />
       </div>
     </div>
   );
